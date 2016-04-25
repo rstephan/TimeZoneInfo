@@ -7,9 +7,11 @@ You can't calculate it! This is why linux uses a database to make DST work.
 So, why not using it for your Arduino?
 It is a bit "heavy", prox. 4kB for the database of one location + the code to make it work.
 
+@warning This is a 32-Bit Version! Year 2038 will come fast!
+
 @author Stephan Ruloff
 @date 24.04.2016
-@license GPLv2
+@copyright GPLv2
 */
 
 #include "TimeZoneInfo.h"
@@ -23,7 +25,7 @@ typedef struct
 } ttinfo;
 
 
-void TimeZoneInfo::setLocaltion_P(const byte* tzfile)
+void TimeZoneInfo::setLocation_P(const byte* tzfile)
 {
   mTzFile = (byte*)tzfile;
   findTimeInfo(1477789201);
@@ -31,6 +33,20 @@ void TimeZoneInfo::setLocaltion_P(const byte* tzfile)
 
 int32_t TimeZoneInfo::utc2local(int32_t utc)
 {
+  int32_t offs;
+
+  offs = findTimeInfo(utc);
+
+  return utc + offs;
+}
+
+int32_t TimeZoneInfo::local2utc(int32_t local)
+{
+  int32_t offs;
+
+  offs = findTimeInfo(local);
+
+  return local - offs;
 }
 
 uint32_t TimeZoneInfo::read32(unsigned long pos)
@@ -54,7 +70,7 @@ uint8_t TimeZoneInfo::read8(unsigned long pos)
   return val;
 }
 
-void TimeZoneInfo::findTimeInfo(int32_t t)
+int32_t TimeZoneInfo::findTimeInfo(int32_t t)
 {
   uint32_t magic;
   uint32_t gmtcnt;
@@ -67,12 +83,12 @@ void TimeZoneInfo::findTimeInfo(int32_t t)
   uint32_t valTime;
   uint32_t valTimeOld;
   uint32_t valIndex;
-  uint32_t gmtoff;
+  uint32_t gmtoff = 0;
   boolean found = false;
   
   magic = read32(0);
   if (magic != 0x545a6966) {
-    return;
+    return 0;
   }
   gmtcnt = read32(20);
   stdcnt = read32(24);
@@ -81,9 +97,9 @@ void TimeZoneInfo::findTimeInfo(int32_t t)
   typecnt = read32(36);
   charcnt = read32(40);
   
-  Serial.println(gmtcnt);
-  Serial.println(timecnt);
-  Serial.println(typecnt);
+  //Serial.println(gmtcnt);
+  //Serial.println(timecnt);
+  //Serial.println(typecnt);
   
   valTimeOld = read32(44);
   for (i = 1; i < timecnt; i++) {
@@ -108,4 +124,6 @@ void TimeZoneInfo::findTimeInfo(int32_t t)
   } else {
     Serial.println("Not found??");
   }
+  
+  return gmtoff;
 }
