@@ -72,13 +72,17 @@ Usualy these files are in /usr/share/zoneinfo.
 
 1. With the "build-in" xxd-tool
 
+    ```
     cd /usr/share/zoneinfo/Europe
-    # Add PROGMEM, if no your are running out of RAM.
+    # Add PROGMEM, if not your are running out of RAM.
     xxd -i Berlin | sed -e 's/unsigned char/unsigned char PROGMEM/' > ~/Arduino/MyProject/Berlin.h
+    ```
 
 2. With my binhex-Tool
 
+    ```
     ./binhex -f /usr/share/zoneinfo/America/Los_Angeles -p ZI_LA > ~/Arduino/MyProject/America_Los_Angeles.h
+    ```
 
 
 # License
