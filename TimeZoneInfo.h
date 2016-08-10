@@ -1,5 +1,5 @@
-#ifndef __TIMEZOMEINFO_H__
-#define __TIMEZOMEINFO_H__
+#ifndef __TIMEZONEINFO_H__
+#define __TIMEZONEINFO_H__
 
 #include <Arduino.h>
 
