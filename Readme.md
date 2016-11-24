@@ -12,7 +12,7 @@ It is a bit "heavy", prox. 4kB for the database of one location + the code to ma
 # Example
 
 
-## UtctoLocal
+## UtcToLocal
 
 
 ```

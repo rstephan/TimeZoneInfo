@@ -1,4 +1,4 @@
-/*
+/**
 @brief Test the UTC conversion
 
 @note Need <Time.h> from http://www.pjrc.com/teensy/td_libs_Time.html
